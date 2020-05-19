@@ -27,4 +27,12 @@ class DevController extends AbstractController
             'age' => 31
         ]);
     }
+
+    /**
+     * @Route("/dev/12", name="dev_show")
+     */
+    public function show()
+    {
+        return $this->render('dev/show.html.twig');
+    }
 }
