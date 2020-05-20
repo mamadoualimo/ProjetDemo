@@ -5,16 +5,15 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Article;
+use App\Repository\ArticleRepository;
 
 class DevController extends AbstractController
 {
     /**
      * @Route("/dev", name="dev")
      */
-    public function index()
+    public function index(ArticleRepository $repo)
     {
-        $repo = $this->getDoctrine()->getRepository(Article::class);
-
         $articles = $repo->findAll();
 
         return $this->render('dev/index.html.twig', [
@@ -37,10 +36,8 @@ class DevController extends AbstractController
     /**
      * @Route("/dev/{id}", name="dev_show")
      */
-    public function show($id)
+    public function show(ArticleRepository $repo, $id)
     {
-        $repo = $this->getDoctrine()->getRepository(Article::class);
-
         $article = $repo->find($id);
    
         return $this->render('dev/show.html.twig', [
