@@ -16,8 +16,10 @@ class ArticleFixtures extends Fixture
                     ->setContent("<p>Contenu de l'article n°$i</p>")
                     ->setImage("http://placehold.it/350x150")
                     ->setCreatedAt(new \DateTime());
+
             $manager->persist($article);
         }
+        
         $manager->flush();
     }
 }
