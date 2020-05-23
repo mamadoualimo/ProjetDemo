@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 
@@ -40,18 +43,33 @@ class DevController extends AbstractController
      */
     public function create(Request $request, EntityManagerInterface $entityManager)
     {
-        if ($request->request->count() > 0) {
-            $article = new Article();
-            $article->setTitle($request->request->get('title'))
-                    ->setContent($request->request->get('content'))
-                    ->setImage($request->request->get('image'))
-                    ->setCreatedAt(new \DateTime());
+        $article = new Article();
 
-            $entityManager->persist($article);
-            $entityManager->flush();
-        }
+        $form = $this->createFormBuilder($article)
+                     ->add('title', TextType::class, [
+                         'attr' => [
+                             'placeholder' => "Titre de l'article",
+                             'class' => 'form-control'
+                         ]
+                     ])
+                     ->add('content', TextareaType::class, [
+                        'attr' => [
+                            'placeholder' => "Contenu de l'article",
+                            'class' => 'form-control'
+                        ]
+                    ])
+                     ->add('image', TextType::class, [
+                        'attr' => [
+                            'placeholder' => "image de l'article",
+                            'class' => 'form-control'
+                        ]
+                    ])
+                     ->getForm();
+                        
 
-        return $this->render('dev/create.html.twig');
+        return $this->render('dev/create.html.twig', [
+            'formArticle' => $form->createView()
+        ]);
     }
 
     /**
