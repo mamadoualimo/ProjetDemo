@@ -46,12 +46,25 @@ class DevController extends AbstractController
     {
         $article = new Article();
 
+        $article->setTitle("Titre d'exemple")
+                ->setContent("Le contenu de l'article");
+
         $form = $this->createFormBuilder($article)
                      ->add('title')
                      ->add('content')
                      ->add('image')
                      ->getForm();
                         
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $article->setCreatedAt(new \DateTime());
+
+            $entityManager->persist($article);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('dev_show', ['id' => $article->getId()]);
+        }
 
         return $this->render('dev/create.html.twig', [
             'formArticle' => $form->createView()
