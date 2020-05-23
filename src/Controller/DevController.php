@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 
@@ -34,12 +36,29 @@ class DevController extends AbstractController
     }
 
     /**
+     * @Route("/dev/new", name="dev_create")
+     */
+    public function create(Request $request, EntityManagerInterface $entityManager)
+    {
+        if ($request->request->count() > 0) {
+            $article = new Article();
+            $article->setTitle($request->request->get('title'))
+                    ->setContent($request->request->get('content'))
+                    ->setImage($request->request->get('image'))
+                    ->setCreatedAt(new \DateTime());
+
+            $entityManager->persist($article);
+            $entityManager->flush();
+        }
+
+        return $this->render('dev/create.html.twig');
+    }
+
+    /**
      * @Route("/dev/{id}", name="dev_show")
      */
-    public function show(ArticleRepository $repo, $id)
+    public function show(Article $article)
     {
-        $article = $repo->find($id);
-   
         return $this->render('dev/show.html.twig', [
             'article' => $article
         ]);
