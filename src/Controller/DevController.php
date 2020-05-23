@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
@@ -48,22 +49,19 @@ class DevController extends AbstractController
         $form = $this->createFormBuilder($article)
                      ->add('title', TextType::class, [
                          'attr' => [
-                             'placeholder' => "Titre de l'article",
-                             'class' => 'form-control'
+                             'placeholder' => "Titre de l'article"
                          ]
                      ])
                      ->add('content', TextareaType::class, [
                         'attr' => [
-                            'placeholder' => "Contenu de l'article",
-                            'class' => 'form-control'
+                            'placeholder' => "Contenu de l'article"
                         ]
-                    ])
+                     ])
                      ->add('image', TextType::class, [
                         'attr' => [
-                            'placeholder' => "image de l'article",
-                            'class' => 'form-control'
+                            'placeholder' => "image de l'article"
                         ]
-                    ])
+                     ])
                      ->getForm();
                         
 
