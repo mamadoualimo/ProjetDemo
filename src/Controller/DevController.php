@@ -47,21 +47,9 @@ class DevController extends AbstractController
         $article = new Article();
 
         $form = $this->createFormBuilder($article)
-                     ->add('title', TextType::class, [
-                         'attr' => [
-                             'placeholder' => "Titre de l'article"
-                         ]
-                     ])
-                     ->add('content', TextareaType::class, [
-                        'attr' => [
-                            'placeholder' => "Contenu de l'article"
-                        ]
-                     ])
-                     ->add('image', TextType::class, [
-                        'attr' => [
-                            'placeholder' => "image de l'article"
-                        ]
-                     ])
+                     ->add('title')
+                     ->add('content')
+                     ->add('image')
                      ->getForm();
                         
 
