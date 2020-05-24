@@ -41,13 +41,14 @@ class DevController extends AbstractController
 
     /**
      * @Route("/dev/new", name="dev_create")
+     * @Route("/dev/{id}/edit", name="dev_edit")
      */
-    public function create(Request $request, EntityManagerInterface $entityManager)
+    public function form(Article $article = null, Request $request, EntityManagerInterface $entityManager)
     {
-        $article = new Article();
-
-        $article->setTitle("Titre d'exemple")
-                ->setContent("Le contenu de l'article");
+        if (!$article) {
+            $article = new Article();
+        }
+        
 
         $form = $this->createFormBuilder($article)
                      ->add('title')
@@ -58,7 +59,9 @@ class DevController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $article->setCreatedAt(new \DateTime());
+            if (!$article->getId()) {
+                $article->setCreatedAt(new \DateTime());
+            }
 
             $entityManager->persist($article);
             $entityManager->flush();
@@ -67,7 +70,8 @@ class DevController extends AbstractController
         }
 
         return $this->render('dev/create.html.twig', [
-            'formArticle' => $form->createView()
+            'formArticle' => $form->createView(),
+            'editMode' => $article->getId() !== null
         ]);
     }
 
