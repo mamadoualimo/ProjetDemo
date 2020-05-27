@@ -10,9 +10,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Entity\Article;
+use App\Entity\Comment;
 use App\Form\ArticleType;
+use App\Form\CommentType;
 
 class DevController extends AbstractController
 {
@@ -81,10 +83,27 @@ class DevController extends AbstractController
     /**
      * @Route("/dev/{id}", name="dev_show")
      */
-    public function show(Article $article)
+    public function show(Article $article, Request $request, EntityManagerInterface $entityManager)
     {
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setCreatedAt(new \DateTime())
+                    ->setArticle($article);
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('dev_show', ['id' => $article->getId()]);
+        }
+
         return $this->render('dev/show.html.twig', [
-            'article' => $article
+            'article' => $article,
+            'commentForm' =>$form->createView()
         ]);
     }
 }
